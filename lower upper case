@@ -1,0 +1,61 @@
+; Problem 1: Read character and swap case (upper <-> lower)
+
+.model small
+.stack 100h
+.data
+msg1 db 'Enter a character: $'
+msg2 db 13, 10, 'Converted character: $'
+.code
+main:
+    mov ax, @data
+    mov ds, ax
+
+    ; Ask user to input character
+    lea dx, msg1
+    mov ah, 9
+    int 21h
+
+    ; Read character
+    mov ah, 1
+    int 21h
+    mov bl, al    ; Store character in BL
+
+    ; Swap case
+    cmp bl, 'A'
+    jl not_alpha
+    cmp bl, 'Z'
+    jle upper_case
+
+    cmp bl, 'a'
+    jl not_alpha
+    cmp bl, 'z'
+    jle lower_case
+
+not_alpha:
+    ; Not an alphabet, display as is
+    jmp display
+
+upper_case:
+    ; Convert upper to lower
+    add bl, 32
+    jmp display
+
+lower_case:
+    ; Convert lower to upper
+    sub bl, 32
+
+display:
+    ; Print result
+    lea dx, msg2
+    mov ah, 9
+    int 21h
+
+    mov dl, bl
+    mov ah, 2
+    int 21h
+
+    ; Exit
+    mov ah, 4ch
+    int 21h
+
+end main
