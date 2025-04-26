@@ -1,0 +1,60 @@
+; Problem 9: Input hex-digit, 3 tries allowed, else terminate
+
+.model small
+.stack 100h
+.data
+m1 db 'Enter a hex digit (0-9 or A-F): $'
+m2 db 13,10,'Invalid input!$'
+m3 db 13,10,'You entered a valid hex digit.$'
+m4 db 13,10,'Failed 3 times. Program terminated.$'
+.code
+main:
+    mov ax, @data
+    mov ds, ax
+
+    mov cx, 3         ; 3 attempts
+
+try_again:
+    lea dx, m1
+    mov ah, 9
+    int 21h
+
+    mov ah, 1
+    int 21h
+    mov bl, al        ; Save input
+
+    ; Check if hex digit
+    cmp bl, '0'
+    jl not_valid
+    cmp bl, '9'
+    jle valid
+
+    cmp bl, 'A'
+    jl not_valid
+    cmp bl, 'F'
+    jle valid
+
+not_valid:
+    lea dx, m2
+    mov ah, 9
+    int 21h
+
+    loop try_again     ; Decrease CX and try again
+
+    ; If failed 3 times
+    lea dx, m4
+    mov ah, 9
+    int 21h
+    jmp exit
+
+valid:
+    ; Success message
+    lea dx, m3
+    mov ah, 9
+    int 21h
+
+exit:
+    mov ah, 4ch
+    int 21h
+
+end main
