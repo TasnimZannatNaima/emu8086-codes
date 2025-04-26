@@ -1,0 +1,36 @@
+; Problem 2: Display '?' and read two decimal digits, sum < 10
+.model small
+.stack 100h
+.data
+m1 db 0ah,0dh,'The sum of '
+c1 db ?,' and '
+c2 db ?, ' is '
+sum db ?,'$'
+.code
+main proc
+    mov ax,@data
+    mov ds,ax
+    
+    mov ah,2
+    mov dl,'?'
+    int 21h
+    
+    mov ah,1
+    int 21h
+    mov c1,al
+    
+    int 21h
+    mov c2,al   
+    
+    add al,c1
+    sub al,48
+    mov sum,al
+    
+    mov ah,9
+    lea dx,m1
+    int 21h
+    exit:
+    mov ah,4ch
+    int 21h
+    main endp
+end main
