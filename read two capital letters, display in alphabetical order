@@ -1,0 +1,55 @@
+; Problem 7: Display '?', read two capital letters, display in alphabetical order
+
+.model small
+.stack 100h
+.data
+prompt db '?$'
+newline db 13,10,'Sorted letters: $'
+.code
+main:
+    mov ax, @data
+    mov ds, ax
+
+    ; Display ?
+    lea dx, prompt
+    mov ah, 9
+    int 21h
+
+    ; Read first letter
+    mov ah, 1
+    int 21h
+    mov bl, al
+
+    ; Read second letter
+    mov ah, 1
+    int 21h
+    mov bh, al
+
+    ; Compare and order
+    cmp bl, bh
+    jle already_sorted
+
+    ; Swap bl and bh if not in order
+    xchg bl, bh
+
+already_sorted:
+    ; Display new line
+    lea dx, newline
+    mov ah, 9
+    int 21h
+
+    ; Display first letter
+    mov dl, bl
+    mov ah, 2
+    int 21h
+
+    ; Display second letter
+    mov dl, bh
+    mov ah, 2
+    int 21h
+
+    ; Exit
+    mov ah, 4ch
+    int 21h
+
+end main
