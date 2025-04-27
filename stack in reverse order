@@ -1,0 +1,37 @@
+; Problem 10: Input string and reverse it using stack
+.model small
+.stack 100h
+.data
+m1 db '?','$'
+.code
+main proc
+    mov ax,@data
+    mov ds,ax
+    
+    mov dx,offset m1
+    mov ah,09h
+    int 21h
+    
+    mov cx,0
+    
+    read_loop:
+    mov ah,01h
+    int 21h
+    cmp al,13
+    je display
+    push ax
+    inc cx
+    jmp read_loop
+    
+    display:
+    reverse_loop:
+    pop dx
+    mov ah,02h
+    int 21h
+    loop reverse_loop
+    
+    exit:
+    mov ah,4ch
+    int 21h
+    main endp
+end main
